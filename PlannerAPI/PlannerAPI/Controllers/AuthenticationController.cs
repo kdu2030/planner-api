@@ -17,17 +17,17 @@ namespace PlannerAPI.Controllers {
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignupRequest request) {
             if (!request.IsValid()) {
-                return BadRequest(new { result = "None of the fields should be blank" });
+                return BadRequest(new { result = "None of the fields should be blank." });
             }
             // Does a user already exist with this username?
             IdentityUser existingUser = await _userManager.FindByNameAsync(request.Username);
             if (existingUser != null) {
-                return BadRequest(new {result = "User Email Exists"});
+                return BadRequest(new {result = "A user with that username already exists."});
             }
 
             IdentityUser user = new IdentityUser { Email = request.Email, UserName = request.Username, PasswordHash = request.PasswordHash};
             await _userManager.CreateAsync(user);
-            return Ok(new { result = _tokenGenerator.generate(user) });
+            return Ok(new { result = _tokenGenerator.Generate(user) });
         }
     }
 

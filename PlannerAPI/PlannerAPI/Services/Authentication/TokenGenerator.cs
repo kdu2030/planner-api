@@ -14,7 +14,7 @@ namespace PlannerAPI.Services.Authentication {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
         }
 
-        public string generate(IdentityUser user) {
+        public string Generate(IdentityUser user) {
             SigningCredentials credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
             Claim[] claims = { new Claim(ClaimTypes.NameIdentifier, user.UserName) };
             JwtSecurityToken token = new JwtSecurityToken(_configuration["JWT:Issuer"], _configuration["JWT:Audience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
