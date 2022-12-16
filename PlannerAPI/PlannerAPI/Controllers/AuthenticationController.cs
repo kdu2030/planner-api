@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using PlannerAPI.Services.Authentication;
+using PlannerAPI.Types;
 
 namespace PlannerAPI.Controllers {
     [ApiController]
@@ -17,34 +18,35 @@ namespace PlannerAPI.Controllers {
         [HttpPost("signup")]
         public async Task<IActionResult> Signup([FromBody] SignupRequest request) {
             if (!request.IsValid()) {
-                return BadRequest(new { result = "None of the fields should be blank." });
+                return BadRequest(new BasicResult("Empty Fields"));
             }
             // Does a user already exist with this username?
             IdentityUser existingUser = await _userManager.FindByNameAsync(request.Username);
             if (existingUser != null) {
-                return BadRequest(new {result = "A user with that username already exists."});
+                return BadRequest(new BasicResult("User with username exists"));
+            }
+            IdentityUser existingUserEmail = await _userManager.FindByEmailAsync(request.Email);
+            if (existingUserEmail != null) {
+                return BadRequest(new BasicResult("User with email exists"));
             }
 
             IdentityUser user = new IdentityUser { Email = request.Email, UserName = request.Username, PasswordHash = request.PasswordHash};
             await _userManager.CreateAsync(user);
-            return Ok(new { result = _tokenGenerator.Generate(user) });
+            return Ok(new BasicResult(_tokenGenerator.Generate(user)));
         }
-    }
 
-    public class SignupRequest {
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-
-        public bool IsValid() {
-            if (Username == null || Email == null || PasswordHash == null) {
-                return false;
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request) {
+            if (!request.isValid()) {
+                return BadRequest(new BasicResult("Empty Fields"));
             }
-            else if(Username.Length == 0 || Email.Length == 0 || PasswordHash.Length == 0) {
-                return false;
+            IdentityUser user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null) {
+                return Unauthorized(new BasicResult("User Not Found"));
+            } else if (user.PasswordHash == request.PasswordHash) {
+                return Ok(new BasicResult(_tokenGenerator.Generate(user)));
             }
-            return true;
+            return Unauthorized(new BasicResult("Incorrect password"));
         }
-        
     }
 }

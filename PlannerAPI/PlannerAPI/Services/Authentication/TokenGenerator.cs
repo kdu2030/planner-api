@@ -20,5 +20,6 @@ namespace PlannerAPI.Services.Authentication {
             JwtSecurityToken token = new JwtSecurityToken(_configuration["JWT:Issuer"], _configuration["JWT:Audience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
