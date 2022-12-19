@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using PlannerAPI.Models;
 
 namespace PlannerAPI.Services.Authentication {
     public class TokenGenerator {
@@ -14,10 +15,10 @@ namespace PlannerAPI.Services.Authentication {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]));
         }
 
-        public string Generate(IdentityUser user) {
+        public string Generate(PlannerUser user) {
             SigningCredentials credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
-            Claim[] claims = { new Claim(ClaimTypes.NameIdentifier, user.UserName) };
-            JwtSecurityToken token = new JwtSecurityToken(_configuration["JWT:Issuer"], _configuration["JWT:Audience"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
+            Claim[] claims = { new Claim(ClaimTypes.NameIdentifier, user.UserName), new Claim(ClaimTypes.Email, user.Email)};
+            JwtSecurityToken token = new JwtSecurityToken(_configuration["JWT:Issuer"], _configuration["JWT:Audience"], claims, expires: DateTime.Now.AddDays(15), signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
