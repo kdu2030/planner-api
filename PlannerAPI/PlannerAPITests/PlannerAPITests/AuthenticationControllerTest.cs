@@ -12,7 +12,7 @@ namespace PlannerAPITests {
     public class AuthenticationControllerTest {
         private IUserStore<PlannerUser> _userStore;
         private Mock<UserManager<PlannerUser>> _userManagerMock;
-        private TokenGenerator _tokenGenerator;
+        private TokenHandler _tokenGenerator;
 
         [TestInitialize]
         public void Setup() {
@@ -27,7 +27,7 @@ namespace PlannerAPITests {
                 {"Jwt:audience", "https://localhost:7074"}
             };
             IConfiguration testConfig = new ConfigurationBuilder().AddInMemoryCollection(configDict).Build();
-            _tokenGenerator = new TokenGenerator(testConfig);
+            _tokenGenerator = new TokenHandler(testConfig);
         }
 
         [TestMethod]

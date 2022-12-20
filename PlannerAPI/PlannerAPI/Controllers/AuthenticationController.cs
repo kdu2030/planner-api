@@ -9,9 +9,9 @@ namespace PlannerAPI.Controllers {
     [Route("auth")]
     public class AuthenticationController : Controller {
         private UserManager<PlannerUser> _userManager;
-        private TokenGenerator _tokenGenerator;
+        private TokenHandler _tokenGenerator;
 
-        public AuthenticationController(UserManager<PlannerUser> userManager, TokenGenerator tokenGenerator) {
+        public AuthenticationController(UserManager<PlannerUser> userManager, TokenHandler tokenGenerator) {
             _userManager = userManager;
             _tokenGenerator = tokenGenerator;
         }
@@ -42,7 +42,7 @@ namespace PlannerAPI.Controllers {
             string tokenName = string.Format("Login Token {0}", user.UserName);
             await _userManager.SetAuthenticationTokenAsync(user, "PlannerAPI Login", tokenName, token);
             
-            return Ok(new AuthResponse(token, user.ProfileImage, "User created successfully"));
+            return Ok(new AuthResponse(user, token, "User created successfully"));
         }
 
         [HttpPost("login")]
@@ -65,7 +65,7 @@ namespace PlannerAPI.Controllers {
                 await _userManager.RemoveAuthenticationTokenAsync(user, "PlannerAPI Login", tokenName);
             }
             await _userManager.SetAuthenticationTokenAsync(user, "PlannerAPI Login", tokenName, token);
-            return Ok(new AuthResponse(token, user.ProfileImage, "Successful login"));            
+            return Ok(new AuthResponse(user, token, "Successful login"));            
         }
     }
 }

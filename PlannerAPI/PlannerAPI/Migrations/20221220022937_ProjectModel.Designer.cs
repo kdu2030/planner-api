@@ -12,8 +12,8 @@ using PlannerAPI.Models;
 namespace PlannerAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221219003335_First")]
-    partial class First
+    [Migration("20221220022937_ProjectModel")]
+    partial class ProjectModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,6 +226,33 @@ namespace PlannerAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("PlannerAPI.Models.Project", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PlannerUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlannerUserId");
+
+                    b.ToTable("Projects");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -275,6 +302,22 @@ namespace PlannerAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PlannerAPI.Models.Project", b =>
+                {
+                    b.HasOne("PlannerAPI.Models.PlannerUser", "User")
+                        .WithMany("Projects")
+                        .HasForeignKey("PlannerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PlannerAPI.Models.PlannerUser", b =>
+                {
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

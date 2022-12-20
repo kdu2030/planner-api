@@ -3,5 +3,6 @@
 namespace PlannerAPI.Models {
     public class PlannerUser : IdentityUser {
         public string ProfileImage { get; set; }
+        public List<Project> Projects { get; set; }
     }
 }

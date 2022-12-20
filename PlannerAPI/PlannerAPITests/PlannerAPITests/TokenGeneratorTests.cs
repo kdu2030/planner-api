@@ -1,10 +1,11 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Identity;
 using PlannerAPI.Services.Authentication;
+using PlannerAPI.Models;
 
 namespace PlannerAPITests {
     [TestClass]
     public class TokenGeneratorTests {
+
         [TestMethod]
         public void GenerateTest() {
             Dictionary<string, string> configDict = new Dictionary<string, string>{
@@ -15,8 +16,8 @@ namespace PlannerAPITests {
             };
 
             IConfiguration testConfig = new ConfigurationBuilder().AddInMemoryCollection(configDict).Build();
-            TokenGenerator generator = new TokenGenerator(testConfig);
-            IdentityUser user = new IdentityUser { UserName = "testUser" };
+            TokenHandler generator = new TokenHandler(testConfig);
+            PlannerUser user = new PlannerUser { UserName = "testUser" };
             Assert.IsTrue(generator.Generate(user).Length > 0);
         }
 
