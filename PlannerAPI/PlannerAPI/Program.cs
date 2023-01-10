@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddIdentity<PlannerUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => { options.TokenValidationParameters = tokenParams; });
-builder.Services.AddScoped(provider => new PlannerAPI.Services.Authentication.TokenHandler(builder.Configuration));
+builder.Services.AddScoped(provider => new PlannerAPI.Services.Authentication.TokenGenerator(builder.Configuration));
 //builder.Services.AddCors(options => {
 //    options.AddDefaultPolicy(policy => policy.WithOrigins("http://localhost:3000"));
 //});

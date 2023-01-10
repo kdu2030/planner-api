@@ -2,9 +2,9 @@
 
 namespace PlannerAPI.Types {
     public class BasicResult {
-        public string Result { get; set; }
+        public object Result { get; set; }
 
-        public BasicResult(string Result) {
+        public BasicResult(object Result) {
             this.Result = Result;
         }
 

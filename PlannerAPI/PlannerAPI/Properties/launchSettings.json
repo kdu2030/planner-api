@@ -10,7 +10,7 @@
   },
   "profiles": {
     "PlannerAPI": {
-      "commandName": "Project",
+      "commandName": "Course",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
